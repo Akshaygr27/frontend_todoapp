@@ -1,4 +1,6 @@
-import axiosInstance from './axiosInstance';
+import axios from 'axios';
 
-export const loginUser = (data) => axiosInstance.post('/login', data);
-export const signupUser = (data) => axiosInstance.post('/signup', data);
+const BASE_URL = 'http://localhost:3000';
+
+export const loginUser = (data) => axios.post(`${BASE_URL}/login`, data);
+export const signupUser = (data) => axios.post(`${BASE_URL}/signup`, data);
