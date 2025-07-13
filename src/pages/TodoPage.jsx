@@ -31,20 +31,26 @@ export default function TodoPage() {
   return (
     <>
     <Navbar />
-    <div className="container py-4">
-      <h2 className="mb-4 text-center">Your Todos</h2>
-      <FilterSearchBar filters={filters} setFilters={setFilters} />
-      <TodoForm onSuccess={fetchTodos} />
-      <TodoList
-        todos={todos}
-        setEditTodo={setEditTodo}
-        setDeleteTodo={setDeleteTodo}
-        filters={filters}
-        setFilters={setFilters}
-        total={total}
-      />
-      {editTodo && <EditModal todo={editTodo} onClose={() => setEditTodo(null)} onSuccess={fetchTodos} />}
-      {deleteTodo && <ConfirmDelete todo={deleteTodo} onClose={() => setDeleteTodo(null)} onSuccess={fetchTodos} />}
+    <div className="container py-4" style={{ maxWidth: '800px' }}>
+      <div className="row justify-content-center">
+        <div className="col-sm-8">
+          <h2 className="mb-4 text-center">Your Todos</h2>
+          <FilterSearchBar filters={filters} setFilters={setFilters} />
+          <TodoForm onSuccess={fetchTodos} />
+          <TodoList
+            todos={todos}
+            setEditTodo={setEditTodo}
+            setDeleteTodo={setDeleteTodo}
+            filters={filters}
+            setFilters={setFilters}
+            total={total}
+            refreshTodos={fetchTodos}
+          />
+          {/* Modals */}
+          {editTodo && <EditModal todo={editTodo} onClose={() => setEditTodo(null)} onSuccess={fetchTodos} />}
+          {deleteTodo && <ConfirmDelete todo={deleteTodo} onClose={() => setDeleteTodo(null)} onSuccess={fetchTodos} />}
+        </div>
+      </div>
     </div>
     </>
   );

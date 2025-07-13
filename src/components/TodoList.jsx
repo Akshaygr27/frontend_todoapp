@@ -1,8 +1,15 @@
-import React from 'react';
-import { Button } from 'react-bootstrap';
-import Navbar from './Navbar';
+import { Button } from "react-bootstrap";
+import { changeStatus } from "../api/todo";
 
-export default function TodoList({ todos, setEditTodo, setDeleteTodo, filters, setFilters, total }) {
+export default function TodoList({
+  todos,
+  setEditTodo,
+  setDeleteTodo,
+  filters,
+  setFilters,
+  total,
+  refreshTodos,
+}) {
   const totalPages = Math.ceil(total / 5);
 
   return (
@@ -10,19 +17,54 @@ export default function TodoList({ todos, setEditTodo, setDeleteTodo, filters, s
       {todos.length === 0 ? (
         <p className="text-muted text-center">No todos found.</p>
       ) : (
-        todos.map(todo => (
+        todos.map((todo) => (
           <div key={todo._id} className="card mb-2 shadow-sm">
             <div className="card-body d-flex justify-content-between align-items-center">
               <div>
                 <h5 className="card-title mb-1">{todo.title}</h5>
-                <p className="card-text mb-0"><strong>Due:</strong> {new Date(todo.dueDate).toLocaleDateString()}</p>
-                <small className={`badge ${todo.status === 'completed' ? 'bg-success' : 'bg-warning text-dark'}`}>
+                <p className="card-text mb-0">
+                  <strong>Due:</strong>{" "}
+                  {new Date(todo.dueDate).toLocaleDateString('en-IN')}
+                </p>
+                <small
+                  className={`badge ${
+                    todo.status === "completed"
+                      ? "bg-success"
+                      : "bg-warning text-dark"
+                  }`}
+                >
                   {todo.status}
                 </small>
               </div>
               <div>
-                <Button variant="outline-primary" size="sm" className="me-2" onClick={() => setEditTodo(todo)}>Edit</Button>
-                <Button variant="outline-danger" size="sm" onClick={() => setDeleteTodo(todo)}>Delete</Button>
+                <Button
+                  variant={todo.status === "pending" ? "success" : "warning"}
+                  size="sm"
+                  className="me-2"
+                  onClick={() =>
+                    changeStatus(
+                      todo._id,
+                      todo.status === "pending" ? "completed" : "pending"
+                    ).then(() => refreshTodos())
+                  }
+                >
+                  {todo.status === "pending" ? "Mark Done" : "Undo"}
+                </Button>
+                <Button
+                  variant="outline-primary"
+                  size="sm"
+                  className="me-2"
+                  onClick={() => setEditTodo(todo)}
+                >
+                  Edit
+                </Button>
+                <Button
+                  variant="outline-danger"
+                  size="sm"
+                  onClick={() => setDeleteTodo(todo)}
+                >
+                  Delete
+                </Button>
               </div>
             </div>
           </div>
@@ -40,7 +82,9 @@ export default function TodoList({ todos, setEditTodo, setDeleteTodo, filters, s
           >
             Prev
           </Button>
-          <span className="align-self-center">Page {filters.page} of {totalPages}</span>
+          <span className="align-self-center">
+            Page {filters.page} of {totalPages}
+          </span>
           <Button
             variant="outline-secondary"
             disabled={filters.page === totalPages}
