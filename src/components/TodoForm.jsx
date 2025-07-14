@@ -1,17 +1,18 @@
 import { useState } from 'react';
 import { createTodo } from '../api/todo';
 
-export default function TodoForm({ onSuccess }) {
+export default function TodoForm({ onSuccess, onToast }) {
   const [form, setForm] = useState({ title: '', dueDate: '' });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await createTodo(form);
+      onToast('Todo created successfully!', 'success');
       setForm({ title: '', dueDate: '' });
       onSuccess();
     } catch (err) {
-      alert(err.response?.data?.error || 'Create failed');
+      onToast(err.response?.data?.error || 'Create failed', 'danger');
     }
   };
 

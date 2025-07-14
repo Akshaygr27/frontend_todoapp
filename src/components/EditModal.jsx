@@ -2,16 +2,18 @@ import { useState } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import { updateTodo } from '../api/todo';
 
-export default function EditModal({ todo, onClose, onSuccess }) {
+export default function EditModal({ todo, onClose, onSuccess, onToast }) {
   const [form, setForm] = useState({ title: todo.title, dueDate: todo.dueDate.slice(0, 10) });
 
   const handleSubmit = async () => {
     try {
       await updateTodo(todo._id, form);
+      onToast('Todo updated successfully!', 'success');
       onSuccess();
       onClose();
+      
     } catch (err) {
-      alert(err.response?.data?.error || 'Update failed');
+      onToast(err.response?.data?.error || 'Update failed', 'danger');
     }
   };
 

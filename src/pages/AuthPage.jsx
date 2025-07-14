@@ -3,6 +3,7 @@ import { useState } from "react";
 import { loginUser, signupUser } from "../api/auth";
 import { useAuth } from "../context/AuthContext";
 import Navbar from "../components/Navbar";
+import ToastMessage from "../components/ToastMessage";
 
 export default function AuthPage() {
   const { login } = useAuth();
@@ -16,6 +17,13 @@ export default function AuthPage() {
     confirmPassword: "",
   });
 
+  const [toast, setToast] = useState({ show: false, message: "", variant: "success" });
+
+  const showToast = (message, variant = "success") =>
+    setToast({ show: true, message, variant });
+
+  const hideToast = () => setToast({ ...toast, show: false });
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMsg("");
@@ -27,7 +35,7 @@ export default function AuthPage() {
           return;
         }
         const res = await signupUser(form);
-        setSuccessMsg(res.data.message || "Signup successful! Please log in.");
+        showToast(res.data.message || "Signup successful!", "success");
         setIsSignup(false);
         setForm({ email: "", username: "", password: "", confirmPassword: "" });
       } else {
@@ -139,6 +147,12 @@ export default function AuthPage() {
           </p>
         </form>
       </div>
+      <ToastMessage
+        show={toast.show}
+        message={toast.message}
+        variant={toast.variant}
+        onClose={hideToast}
+      />
     </>
   );
 }

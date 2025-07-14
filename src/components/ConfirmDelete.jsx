@@ -1,14 +1,15 @@
 import { Modal, Button } from 'react-bootstrap';
 import { deleteTodo } from '../api/todo';
 
-export default function ConfirmDelete({ todo, onClose, onSuccess }) {
+export default function ConfirmDelete({ todo, onClose, onSuccess, onToast }) {
   const handleDelete = async () => {
     try {
       await deleteTodo(todo._id);
+      onToast('Todo deleted successfully!', 'success');
       onSuccess();
       onClose();
     } catch (err) {
-      alert(err.response?.data?.error || 'Delete failed');
+      onToast(err.response?.data?.error || 'Delete failed', 'danger');
     }
   };
 
