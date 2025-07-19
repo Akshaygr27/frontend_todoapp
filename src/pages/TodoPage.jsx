@@ -7,6 +7,8 @@ import FilterSearchBar from '../components/FilterSearchBar';
 import { getTodos } from '../api/todo';
 import Navbar from '../components/Navbar';
 import ToastMessage from '../components/ToastMessage';
+import ExportDropdown from '../components/ExportDropdown';
+
 
 export default function TodoPage() {
   const [todos, setTodos] = useState([]);
@@ -25,7 +27,7 @@ export default function TodoPage() {
       setTodos(res.data.todos);
       setTotal(res.data.total);
     } catch (err) {
-      alert('Error fetching todos');
+      showToast('Error fetching todos');
     }
   };
 
@@ -40,7 +42,11 @@ export default function TodoPage() {
       <div className="row justify-content-center">
         <div className="col-sm-8">
           <h2 className="mb-4 text-center">Your Todos</h2>
-          <FilterSearchBar filters={filters} setFilters={setFilters} />
+          <div className="d-flex justify-content-between mb-3">
+            
+            <FilterSearchBar filters={filters} setFilters={setFilters} />
+            <ExportDropdown />
+          </div>
           <TodoForm onSuccess={fetchTodos} onToast={showToast}/>
           <TodoList
             todos={todos}
